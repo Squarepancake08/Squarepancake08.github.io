@@ -2,58 +2,78 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>PS4 Navigation Test</title>
+<title>PS4 Keyboard Event Test</title>
 
 <style>
 body{
+    margin:0;
     background:#111;
-    color:white;
-    font-family:Arial;
-    text-align:center;
-    margin-top:60px;
+    color:#fff;
+    font-family:monospace;
+    padding:20px;
+}
+
+#log{
+    white-space:pre-wrap;
+    border:2px solid #555;
+    padding:15px;
+    margin-top:20px;
+    min-height:300px;
+    overflow:auto;
 }
 
 button{
-    display:block;
-    width:300px;
-    margin:20px auto;
-    padding:20px;
     font-size:24px;
-    border:none;
-    border-radius:12px;
-    background:#333;
-    color:white;
-}
-
-button:focus{
-    background:#ff6600;
-    color:black;
-    outline:6px solid yellow;
+    padding:15px 30px;
 }
 </style>
 </head>
-
 <body>
 
-<h1>PS4 Browser Navigation Test</h1>
+<h1>PS4 Input Test</h1>
 
-<p>Try using the D-Pad, left stick, and ✕.</p>
+<p>Click the button once with ✕, then press every button on the controller.</p>
 
-<button autofocus onclick="alert('Button 1')">
-Button 1
-</button>
+<button autofocus>Activate Me</button>
 
-<button onclick="alert('Button 2')">
-Button 2
-</button>
+<div id="log">Waiting for input...</div>
 
-<button onclick="alert('Button 3')">
-Button 3
-</button>
+<script>
 
-<button onclick="alert('Button 4')">
-Button 4
-</button>
+const log=document.getElementById("log");
+
+function add(type,e){
+
+log.textContent=
+type+
+"\n\n"+
+"key: "+e.key+
+"\ncode: "+e.code+
+"\nkeyCode: "+e.keyCode+
+"\nwhich: "+e.which+
+"\nlocation: "+e.location+
+"\nrepeat: "+e.repeat;
+
+}
+
+["keydown","keyup","keypress"].forEach(type=>{
+document.addEventListener(type,e=>add(type,e));
+});
+
+["mousedown","mouseup","click"].forEach(type=>{
+document.addEventListener(type,e=>{
+log.textContent=
+type+
+"\nbutton: "+e.button+
+"\nbuttons: "+e.buttons;
+});
+});
+
+document.addEventListener("focusin",e=>{
+log.textContent="Focus moved to: "+e.target.tagName;
+});
+
+</script>
 
 </body>
 </html>
