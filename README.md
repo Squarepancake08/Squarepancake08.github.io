@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>PS4 Keyboard Event Test</title>
+<title>PS4 Input Detective</title>
 
 <style>
 body{
@@ -10,67 +10,277 @@ body{
     background:#111;
     color:#fff;
     font-family:monospace;
-    padding:20px;
+    overflow:hidden;
 }
 
-#log{
-    white-space:pre-wrap;
-    border:2px solid #555;
+#info{
+    position:fixed;
+    left:10px;
+    top:10px;
+    background:#222;
     padding:15px;
-    margin-top:20px;
-    min-height:300px;
-    overflow:auto;
+    border-radius:10px;
+    white-space:pre-wrap;
 }
 
-button{
-    font-size:24px;
-    padding:15px 30px;
+#cursor{
+    position:absolute;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:#ff6600;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
 }
 </style>
 </head>
 <body>
 
-<h1>PS4 Input Test</h1>
+<div id="cursor"></div>
 
-<p>Click the button once with ✕, then press every button on the controller.</p>
-
-<button autofocus>Activate Me</button>
-
-<div id="log">Waiting for input...</div>
+<div id="info">
+Waiting...
+</div>
 
 <script>
 
-const log=document.getElementById("log");
+const info=document.getElementById("info");
+const cursor=document.getElementById("cursor");
 
-function add(type,e){
+let x=window.innerWidth/2;
+let y=window.innerHeight/2;
 
-log.textContent=
-type+
-"\n\n"+
-"key: "+e.key+
-"\ncode: "+e.code+
-"\nkeyCode: "+e.keyCode+
-"\nwhich: "+e.which+
-"\nlocation: "+e.location+
-"\nrepeat: "+e.repeat;
-
+function log(text){
+    info.textContent=text;
 }
 
-["keydown","keyup","keypress"].forEach(type=>{
-document.addEventListener(type,e=>add(type,e));
+document.addEventListener("mousemove",e=>{
+    x=e.clientX;
+    y=e.clientY;
+    cursor.style.left=x+"px";
+    cursor.style.top=y+"px";
+
+    log(
+`EVENT: mousemove
+
+x: ${e.clientX}
+y: ${e.clientY}
+
+movementX: ${e.movementX}
+movementY: ${e.movementY}`);
 });
 
-["mousedown","mouseup","click"].forEach(type=>{
-document.addEventListener(type,e=>{
-log.textContent=
-type+
-"\nbutton: "+e.button+
-"\nbuttons: "+e.buttons;
-});
+document.addEventListener("pointermove",e=>{
+    log(
+`EVENT: pointermove
+
+x:${e.clientX}
+y:${e.clientY}
+
+pointerType:${e.pointerType}`);
 });
 
-document.addEventListener("focusin",e=>{
-log.textContent="Focus moved to: "+e.target.tagName;
+document.addEventListener("wheel",e=>{
+    log(
+`EVENT: wheel
+
+deltaX:${e.deltaX}
+deltaY:${e.deltaY}`);
+});
+
+document.addEventListener("keydown",e=>{
+    log(
+`EVENT: keydown
+
+key:${e.key}
+code:${e.code}
+keyCode:${e.keyCode}`);
+});
+
+document.addEventListener("keyup",e=>{
+    log(
+`EVENT: keyup
+
+key:${e.key}`);
+});
+
+document.addEventListener("mousedown",e=>{
+    log(
+`EVENT: mousedown
+
+button:${e.button}`);
+});
+
+document.addEventListener("mouseup",e=>{
+    log(
+`EVENT: mouseup
+
+button:${e.button}`);
+});
+
+document.addEventListener("touchstart",e=>{
+    log("EVENT: touchstart");
+});
+
+document.addEventListener("touchmove",e=>{
+    log("EVENT: touchmove");
+});
+
+document.addEventListener("touchend",e=>{
+    log("EVENT: touchend");
+});
+
+window.addEventListener("blur",()=>{
+    log("WINDOW LOST FOCUS");
+});
+
+window.addEventListener("focus",()=>{
+    log("WINDOW FOCUSED");
+});
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PS4 Input Detective</title>
+
+<style>
+body{
+    margin:0;
+    background:#111;
+    color:#fff;
+    font-family:monospace;
+    overflow:hidden;
+}
+
+#info{
+    position:fixed;
+    left:10px;
+    top:10px;
+    background:#222;
+    padding:15px;
+    border-radius:10px;
+    white-space:pre-wrap;
+}
+
+#cursor{
+    position:absolute;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:#ff6600;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<div id="info">
+Waiting...
+</div>
+
+<script>
+
+const info=document.getElementById("info");
+const cursor=document.getElementById("cursor");
+
+let x=window.innerWidth/2;
+let y=window.innerHeight/2;
+
+function log(text){
+    info.textContent=text;
+}
+
+document.addEventListener("mousemove",e=>{
+    x=e.clientX;
+    y=e.clientY;
+    cursor.style.left=x+"px";
+    cursor.style.top=y+"px";
+
+    log(
+`EVENT: mousemove
+
+x: ${e.clientX}
+y: ${e.clientY}
+
+movementX: ${e.movementX}
+movementY: ${e.movementY}`);
+});
+
+document.addEventListener("pointermove",e=>{
+    log(
+`EVENT: pointermove
+
+x:${e.clientX}
+y:${e.clientY}
+
+pointerType:${e.pointerType}`);
+});
+
+document.addEventListener("wheel",e=>{
+    log(
+`EVENT: wheel
+
+deltaX:${e.deltaX}
+deltaY:${e.deltaY}`);
+});
+
+document.addEventListener("keydown",e=>{
+    log(
+`EVENT: keydown
+
+key:${e.key}
+code:${e.code}
+keyCode:${e.keyCode}`);
+});
+
+document.addEventListener("keyup",e=>{
+    log(
+`EVENT: keyup
+
+key:${e.key}`);
+});
+
+document.addEventListener("mousedown",e=>{
+    log(
+`EVENT: mousedown
+
+button:${e.button}`);
+});
+
+document.addEventListener("mouseup",e=>{
+    log(
+`EVENT: mouseup
+
+button:${e.button}`);
+});
+
+document.addEventListener("touchstart",e=>{
+    log("EVENT: touchstart");
+});
+
+document.addEventListener("touchmove",e=>{
+    log("EVENT: touchmove");
+});
+
+document.addEventListener("touchend",e=>{
+    log("EVENT: touchend");
+});
+
+window.addEventListener("blur",()=>{
+    log("WINDOW LOST FOCUS");
+});
+
+window.addEventListener("focus",()=>{
+    log("WINDOW FOCUSED");
 });
 
 </script>
